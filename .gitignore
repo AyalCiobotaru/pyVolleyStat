@@ -1,2 +1,7 @@
 # Database doesn't need to be added
 *.csv
+
++# Byte-compiled / optimized / DLL files
+ +__pycache__/
+ +*.py[cod]
+ +*$py.class
