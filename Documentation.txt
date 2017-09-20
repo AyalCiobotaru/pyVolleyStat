@@ -1,0 +1,4 @@
+** DOCUMENTATION **
+
+To Add one: df2.set_value('Ayal', ('Attack', 'Att'), addOne(df2['Attack']['Att']['Ayal']))
+This will work even if value is NaN because addOne() has a check for it
