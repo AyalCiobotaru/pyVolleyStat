@@ -39,7 +39,10 @@ def applyFormulas():
 
     Stats = Stats.round(3)
 
-def saveData(name):
+def savePickleDAO(name):
     global Stats
-    Stats.to_pickle('Database/' + name + '.pickle')
-    Stats.to_csv('Database/' + name + '.csv')
+    Stats.to_pickle(name)
+
+def saveCSVDAO(name):
+    global Stats
+    Stats.to_csv(name)

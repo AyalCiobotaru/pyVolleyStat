@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import messagebox, filedialog
 from playerWidget import Player
 from scrollableFrame import scrollableFrame
 from dataFrameDAO import *
@@ -14,7 +14,20 @@ class Application(tk.Frame):
         self.columnCount=0
         self.rowCount=0
         self.bind("<Destroy>", self.onExit)
+        self.createMenu()
         self.createBoard()
+
+    def createMenu(self):
+        menuBar = tk.Menu(self)
+        self.master.config(menu=menuBar)
+        fileMenu = tk.Menu(menuBar, tearoff=0)
+        menuBar.add_cascade(label="File", menu=fileMenu)
+        fileMenu.add_command(label="New", command=self.newSession)
+        fileMenu.add_command(label="Save as pickle", command=self.savePickle)
+        fileMenu.add_command(label="Save as CSV", command=self.saveCSV)
+        fileMenu.add_command(label="Load", command=self.loadSession)
+        fileMenu.add_command(label="Exit", command=self.onExit)
+        fileMenu.insert_separator(fileMenu.index(tk.END))
 
     def createBoard(self):
         scframe = scrollableFrame(self.master)
@@ -59,9 +72,27 @@ class Application(tk.Frame):
             command=lambda: changeButtons())
         btn1.grid(row=3,column=0)
 
+    def newSession(self):
+        pass
+
+    def loadSession(self):
+        pass
+
+    def savePickle(self):
+        savedName = filedialog.asksaveasfilename(initialdir ="/Database" ,title = "Select file",filetypes = (("pickle files","*.pickle"),("all files","*.*")), defaultextension=".pickle")
+        applyFormulas()
+        if savedName is None:
+            return
+        savePickleDAO(savedName)
+
+    def saveCSV(self):
+        savedName = filedialog.asksaveasfilename(initialdir ="/Database" ,title = "Select file",filetypes = (("CSV (Comma delimited)", "*.csv"),("all files","*.*")), defaultextension=".csv")
+        applyFormulas()
+        if savedName is None:
+            return
+        saveCSVDAO(savedName)
 
     def onExit(self, *args, **kw):
-        # applyFormulas()
         # printDataframe()
-        # saveData("test")
-        pass
+        self.quit()
+        self.destroy()
