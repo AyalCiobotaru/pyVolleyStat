@@ -73,7 +73,6 @@ class Application(tk.Frame):
         btn1.grid(row=3,column=0)
 
     def newSession(self):
-<<<<<<< Updated upstream
         getEmptyDataFrame()
         messagebox.showinfo("New Database",
         "New empty Database has been loaded.")
@@ -102,28 +101,5 @@ class Application(tk.Frame):
 
     def onExit(self, *args, **kw):
         printDataframe()
-=======
-        pass
-
-    def loadSession(self):
-        pass
-
-    def savePickle(self):
-        savedName = filedialog.asksaveasfilename(initialdir ="/Database" ,title = "Select file",filetypes = (("pickle files","*.pickle"),("all files","*.*")), defaultextension=".pickle")
-        applyFormulas()
-        if savedName is None:
-            return
-        savePickleDAO(savedName)
-
-    def saveCSV(self):
-        savedName = filedialog.asksaveasfilename(initialdir ="/Database" ,title = "Select file",filetypes = (("CSV (Comma delimited)", "*.csv"),("all files","*.*")), defaultextension=".csv")
-        applyFormulas()
-        if savedName is None:
-            return
-        saveCSVDAO(savedName)
-
-    def onExit(self, *args, **kw):
-        # printDataframe()
->>>>>>> Stashed changes
         self.quit()
         self.destroy()
