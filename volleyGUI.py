@@ -88,14 +88,14 @@ class Application(tk.Frame):
     def savePickle(self):
         savedName = filedialog.asksaveasfilename(initialdir ="/Database" ,title = "Select file",filetypes = (("pickle files","*.pickle"),("all files","*.*")), defaultextension=".pickle")
         applyFormulas()
-        if savedName is None:
+        if savedName is "":
             return
         savePickleDAO(savedName)
 
     def saveCSV(self):
         savedName = filedialog.asksaveasfilename(initialdir ="/Database" ,title = "Select file",filetypes = (("CSV (Comma delimited)", "*.csv"),("all files","*.*")), defaultextension=".csv")
         applyFormulas()
-        if savedName is None:
+        if savedName is "":
             return
         saveCSVDAO(savedName)
 
