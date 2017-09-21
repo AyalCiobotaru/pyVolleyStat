@@ -73,10 +73,17 @@ class Application(tk.Frame):
         btn1.grid(row=3,column=0)
 
     def newSession(self):
-        pass
+        getEmptyDataFrame()
+        messagebox.showinfo("New Database",
+        "New empty Database has been loaded.")
 
     def loadSession(self):
-        pass
+        loadName = filedialog.askopenfile(initialdir = "/Database", title = "Select file", filetypes = (("pickle files","*.pickle"),("all files","*.*")))
+        if loadName is None:
+            messagebox.showwarning("No Database",
+            "No Database has been loaded, please try again.")
+        else:
+            loadDatabase(loadName)
 
     def savePickle(self):
         savedName = filedialog.asksaveasfilename(initialdir ="/Database" ,title = "Select file",filetypes = (("pickle files","*.pickle"),("all files","*.*")), defaultextension=".pickle")
@@ -93,6 +100,6 @@ class Application(tk.Frame):
         saveCSVDAO(savedName)
 
     def onExit(self, *args, **kw):
-        # printDataframe()
+        printDataframe()
         self.quit()
         self.destroy()

@@ -2,9 +2,13 @@ import pandas as pd
 
 Stats = None
 
-def getDataFrame(name):
+def getEmptyDataFrame():
     global Stats
-    Stats = pd.read_pickle('Database/' + name + '.pickle')
+    Stats = pd.read_pickle('Database/empty.pickle')
+
+def loadDatabase(name):
+    global Stats
+    Stats = pd.read_pickle(name.name)
 
 def addOneStatDAO(level, sublevel, player):
     global Stats
@@ -39,10 +43,7 @@ def applyFormulas():
 
     Stats = Stats.round(3)
 
-def savePickleDAO(name):
+def saveData(name):
     global Stats
-    Stats.to_pickle(name)
-
-def saveCSVDAO(name):
-    global Stats
-    Stats.to_csv(name)
+    Stats.to_pickle('Database/' + name + '.pickle')
+    Stats.to_csv('Database/' + name + '.csv')
