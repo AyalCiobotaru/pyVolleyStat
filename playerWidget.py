@@ -11,7 +11,7 @@ class Player(tk.Frame):
 
     def midPlayButtons(self):
         self.stat0.config(text="Att", command=lambda: self.addOneStat("Attack", "Att", self.Name))
-        self.stat1.config(text="Kill", command=lambda: self.addOneStat("Attack", "Kill", self.Name))
+        self.stat1.config(text="Kill", command=lambda: self.buttonCommandHelper("Attack", "Kill", self.Name, True))
         self.stat2.config(text="Err", command=lambda: self.addOneStat("Attack", "Err", self.Name))
         self.stat3.config(text="Block", command=lambda: self.addOneStat("Block", "Tot", self.Name))
         self.stat4.config(state="normal")
@@ -21,7 +21,7 @@ class Player(tk.Frame):
 
     def showServeRecieve(self):
         self.stat0.config(text="0", command = lambda: self.addOneStat("Reception", "0", self.Name))
-        self.stat1.config(text="1", command=lambda: self.addOneStat("Reception", "1", self.Name))
+        self.stat1.config(text="1", command=lambda: self.buttonCommandHelper("Reception", "1", self.Name, True))
         self.stat2.config(text="2", command=lambda: self.addOneStat("Reception", "2", self.Name))
         self.stat3.config(text="3", command=lambda: self.addOneStat("Reception", "3", self.Name))
         self.stat4.config(state="disabled")
@@ -35,9 +35,9 @@ class Player(tk.Frame):
         print(super())
         if changeButtons:
             if level == "Serve" or level == "Reception":
-                super(Player, self).changeButtons()
+                super().randomeThing()
             else:
-                super(Player, self).changeButtonsBack()
+                super().randomeThing()
 
     def addOneStat(self, level, sublevel, player):
         """Calls the addOneStatDAO in order to add one to the desired stat """

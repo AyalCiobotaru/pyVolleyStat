@@ -30,7 +30,7 @@ class Application(tk.Frame):
         fileMenu.insert_separator(fileMenu.index(tk.END))
 
     def createBoard(self):
-        scframe = scrollableFrame(self.master)
+        scframe = scrollableFrame(self)
         scframe.grid(row=0,column=0, rowspan=2)
 
         def createPlayer(player):
@@ -40,7 +40,7 @@ class Application(tk.Frame):
                 "Cannot add %s as he is already in the game" % player)
             else:
                 self.columnCount += 1
-                newPlayer = Player(self.master, player)
+                newPlayer = Player(self, player)
                 newPlayer.config(bg="grey", bd=5, relief="raised")
                 newPlayer.grid(row=self.rowCount, column=self.columnCount)
                 self.playerWidget.append(newPlayer)
@@ -67,10 +67,13 @@ class Application(tk.Frame):
                 command=lambda i=i,x=x: createPlayer(self.players[i]))
             btn.pack(padx=10, pady=5, side=tk.TOP)
 
-        btn1 = tk.Button(self.master, height=1, width=20,
+        btn1 = tk.Button(self, height=1, width=20,
             bg="red", fg="yellow", text="Change",
             command=lambda: changeButtons())
         btn1.grid(row=3,column=0)
+
+    def randomeThing(self):
+        print("SUP DUDE")
 
     def newSession(self):
         getEmptyDataFrame()
