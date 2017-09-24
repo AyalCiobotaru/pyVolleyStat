@@ -30,7 +30,7 @@ class Application(tk.Frame):
         fileMenu.insert_separator(fileMenu.index(tk.END))
 
     def createBoard(self):
-        scframe = scrollableFrame(self.master)
+        scframe = scrollableFrame(self)
         scframe.grid(row=0,column=0, rowspan=2)
 
         def createPlayer(player):
@@ -40,7 +40,7 @@ class Application(tk.Frame):
                 "Cannot add %s as he is already in the game" % player)
             else:
                 self.columnCount += 1
-                newPlayer = Player(self.master, player)
+                newPlayer = Player(self, player)
                 newPlayer.config(bg="grey", bd=5, relief="raised")
                 newPlayer.grid(row=self.rowCount, column=self.columnCount)
                 self.playerWidget.append(newPlayer)
@@ -50,16 +50,6 @@ class Application(tk.Frame):
                     self.columnCount = 0
                     self.rowCount += 1
 
-        def changeButtons():
-            for player in self.playerWidget:
-                player.midPlayButtons()
-            btn1.config(command=lambda: changeButtonsBack())
-
-        def changeButtonsBack():
-            for player in self.playerWidget:
-                player.showServeRecieve()
-            btn1.config(command=lambda: changeButtons())
-
         for i, x in enumerate(self.players):
             btn = tk.Button(scframe.interior, height=1, width=20, relief=tk.FLAT,
                 bg="gray99", fg="purple3",
@@ -67,10 +57,13 @@ class Application(tk.Frame):
                 command=lambda i=i,x=x: createPlayer(self.players[i]))
             btn.pack(padx=10, pady=5, side=tk.TOP)
 
-        btn1 = tk.Button(self.master, height=1, width=20,
-            bg="red", fg="yellow", text="Change",
-            command=lambda: changeButtons())
-        btn1.grid(row=3,column=0)
+    def toMidPlayButtons(self):
+        for player in self.playerWidget:
+            player.midPlayButtons()
+
+    def toServeAndReceiveButtons(self):
+        for player in self.playerWidget:
+            player.showServeRecieve()
 
     def newSession(self):
         getEmptyDataFrame()
@@ -100,6 +93,6 @@ class Application(tk.Frame):
         saveCSVDAO(savedName)
 
     def onExit(self, *args, **kw):
-        printDataframe()
+        # printDataframe()
         self.quit()
         self.destroy()
