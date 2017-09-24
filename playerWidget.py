@@ -24,6 +24,7 @@ class Player(tk.Frame):
         self.stat0.config(text="0", command = lambda: self.buttonCommandHelper("Reception", "0", self.Name, False))
         self.stat1.config(text="1", command=lambda: self.buttonCommandHelper("Reception", "1", self.Name, True))
         self.stat2.config(text="2", command=lambda: self.buttonCommandHelper("Reception", "2", self.Name, True))
+        self.stat3.config(text="3", command=lambda: self.buttonCommandHelper("Reception", "3", self.Name, True))
         self.stat4.config(state="disabled")
         self.serve1.config(state="normal")
         self.serve2.config(state="normal")
