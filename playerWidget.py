@@ -9,6 +9,8 @@ class Player(tk.Frame):
         self.Name = name
         self.Master = master
         self.initialButtons()
+        self.quit = tk.Button(self, bg = "red", text = "X", command = lambda: self.onExit())
+        # self.quit.grid(row=0, column=4)
 
     def midPlayButtons(self):
         self.stat0.config(text="Att", command=lambda: self.buttonCommandHelper("Attack", "Att", self.Name, False))
@@ -33,7 +35,8 @@ class Player(tk.Frame):
     def buttonCommandHelper(self, level, sublevel, player, changeButtons):
         """Calls addOneStat as well as the midPlayButtons or showServeRecieve functions"""
         self.addOneStat(level, sublevel, player)
-        print(super())
+        visualCueMessage = self.myStringBuilder(level, sublevel, player)
+        self.Master.updateVisualCue(visualCueMessage, level, sublevel, player)
         if changeButtons:
             if level == "Serve" or level == "Reception":
                 self.Master.toMidPlayButtons()
@@ -89,3 +92,37 @@ class Player(tk.Frame):
             text = "Ace", relief = "ridge",
             command = lambda: self.buttonCommandHelper("Serve", "Ace", self.Name, False))
         self.serve3.grid(row=2, column = 4)
+
+    def myStringBuilder(self, level, sublevel, player):
+        message = player
+        if level == "Attack":
+            if sublevel == "Att":
+                message += " got an attempt"
+            elif sublevel == "Kill":
+                message += " got a kill"
+            else:
+                message += "got a hitting error"
+        elif level == "Serve":
+            if sublevel == "Tot":
+                message += " served the ball in"
+            elif sublevel == "Ace":
+                message += " got an ace"
+            else:
+                message += " got a service error"
+        elif level == "Dig":
+            message += " got a dig"
+        elif level == "Block":
+            message += " got a block"
+        else: # Reception
+            if sublevel == "0":
+                message += " got aced"
+            if sublevel == "1":
+                message += " passed a 1"
+            if sublevel == "2":
+                message += " passed a 2"
+            if sublevel == "3":
+                message += " passed a 3"
+        return message
+
+    def onExit(self):
+        print("Hi")

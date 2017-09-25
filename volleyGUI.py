@@ -14,8 +14,10 @@ class Application(tk.Frame):
         self.columnCount=0
         self.rowCount=0
         self.bind("<Destroy>", self.onExit)
+        self.lastAction = {"level":"", "sublevel":"", "Player":""}
         self.createMenu()
         self.createBoard()
+        self.createVisualCue()
 
     def createMenu(self):
         menuBar = tk.Menu(self)
@@ -38,7 +40,8 @@ class Application(tk.Frame):
             if player in self.playing:
                 messagebox.showwarning("Add Player",
                 "Cannot add %s as he is already in the game" % player)
-            else:
+
+            elif len(self.playing) != 6:
                 self.columnCount += 1
                 newPlayer = Player(self, player)
                 newPlayer.config(bg="grey", bd=5, relief="raised")
@@ -49,6 +52,12 @@ class Application(tk.Frame):
                 if self.columnCount == 3:
                     self.columnCount = 0
                     self.rowCount += 1
+            else:
+                messagebox.showwarning("Add Player",
+                    "Cannot add %s for there are already six players in the game." % player +
+                    "\nRemove a player in order to add another." +
+                    "\n\nBut that's not implemented yet, so use these guys or start over.")
+
 
         for i, x in enumerate(self.players):
             btn = tk.Button(scframe.interior, height=1, width=20, relief=tk.FLAT,
@@ -56,6 +65,38 @@ class Application(tk.Frame):
                 font="Dosis", text=self.players[i],
                 command=lambda i=i,x=x: createPlayer(self.players[i]))
             btn.pack(padx=10, pady=5, side=tk.TOP)
+
+    def createVisualCue(self):
+        self.lastMove = tk.Label(self, text="Select the players in the game",
+            width = 52, height = 2,
+            relief = "sunken", bg = "black", fg = "white")
+        self.lastMove.grid(row=2, column=1, columnspan=2, ipady="3")
+
+        self.undoButton = tk.Button(self, text="Undo",
+            width = 25, height = 2,
+            relief = "raised", bg = "black", fg = "white",
+            command = lambda: self.takeAwayStat(),
+            state = "disabled")
+        self.undoButton.grid(row=2, column=3)
+
+    def updateVisualCue(self, message, level, sublevel, player):
+        self.undoButton.config(state = "normal")
+        self.lastMove.config(text = message)
+        self.lastAction["Player"] = player
+        self.lastAction["level"] = level
+        self.lastAction["sublevel"] = sublevel
+
+    def takeAwayStat(self):
+        removeOneStatDAO(self.lastAction["level"], self.lastAction["sublevel"], self.lastAction["Player"])
+        if self.lastAction["sublevel"] == "Kill" or self.lastAction["sublevel"] == "Err" or self.lastAction["sublevel"] == "Ace":
+            removeOneStatDAO(self.lastAction["level"], "Att", self.lastAction["Player"]) if self.lastAction["level"] == "Attack" else removeOneStatDAO(self.lastAction["level"], "Tot", self.lastAction["Player"])
+        if self.lastAction["level"] == "Serve" or self.lastAction["level"] == "Reception":
+            self.toServeAndReceiveButtons()
+        else:
+            self.toMidPlayButtons()
+        self.updateVisualCue("%s's %s stat was removed" % (self.lastAction["Player"], self.lastAction["level"]), "", "" , "")
+        self.undoButton.config(state = "disabled")
+
 
     def toMidPlayButtons(self):
         for player in self.playerWidget:

@@ -19,6 +19,15 @@ def addOneStatDAO(level, sublevel, player):
         return 1 if pd.isnull(x) else x + 1
     Stats.set_value(player , (level, sublevel), addOne(Stats[level][sublevel][player]))
 
+def removeOneStatDAO(level, sublevel, player):
+    global Stats
+    def subOne(x):
+        """
+        Returns x - 1
+        """
+        return x - 1
+    Stats.set_value(player, (level, sublevel), subOne(Stats[level][sublevel][player]))
+
 def printDataframe():
     global Stats
     print(Stats)
