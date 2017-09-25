@@ -101,7 +101,7 @@ class Player(tk.Frame):
             elif sublevel == "Kill":
                 message += " got a kill"
             else:
-                message += "got a hitting error"
+                message += " got a hitting error"
         elif level == "Serve":
             if sublevel == "Tot":
                 message += " served the ball in"
