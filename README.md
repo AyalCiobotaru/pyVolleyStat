@@ -11,6 +11,8 @@ This will open up a tkinter GUI with a list of names on the left side, push butt
 ## Requirements
 
 Python 3.5 or newer
+
 Pandas
+
 tkinter
 ### NOTE: TKinter will not work as it is the old version
