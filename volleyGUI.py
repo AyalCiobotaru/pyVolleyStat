@@ -7,17 +7,40 @@ from dataFrameDAO import *
 class Application(tk.Frame):
     def __init__(self, master, *args, **kw):
         super().__init__(master, *args, **kw)
-        self.grid()
+        self.grid(sticky = "NSEW")
+
         self.players = ["Ayal","Brendan", "Carl", "James", "Kyle", "Max", "Ryan", "Scott", "Sean", "Tyler", "Yoder"]
         self.playing = []
         self.playerWidget = []
         self.columnCount=0
         self.rowCount=0
-        self.bind("<Destroy>", self.onExit)
         self.lastAction = {"level":"", "sublevel":"", "Player":""}
+
+        self.bind("<Configure>", self.onResize)
+        self.bind("<Destroy>", self.onExit)
+        self.height = self.winfo_reqheight()
+        self.width = self.winfo_reqwidth()
+
         self.createMenu()
-        self.createBoard()
         self.createVisualCue()
+
+        self.grid_columnconfigure(0, weight = 1)
+        self.grid_columnconfigure(1, weight = 1)
+        self.grid_columnconfigure(2, weight = 1)
+        self.grid_columnconfigure(3, weight = 1)
+        self.grid_rowconfigure(0, weight = 1)
+        self.grid_rowconfigure(1, weight = 1)
+        self.grid_rowconfigure(2, weight = 1)
+
+    def onResize(self, event):
+         # determine the ratio of old width/height to new width/height
+        wscale = float(event.width)/self.width
+        hscale = float(event.height)/self.height
+        self.width = event.width
+        self.height = event.height
+
+        # resize the canvas
+        self.config(width=self.width, height=self.height)
 
     def createMenu(self):
         menuBar = tk.Menu(self)
@@ -33,7 +56,7 @@ class Application(tk.Frame):
 
     def createBoard(self):
         scframe = scrollableFrame(self)
-        scframe.grid(row=0,column=0, rowspan=2)
+        scframe.grid(row = 0, column = 0, rowspan = 2, sticky = "NSEW")
 
         def createPlayer(player):
             # Check to make sure player isn't already in the game
@@ -45,7 +68,7 @@ class Application(tk.Frame):
                 self.columnCount += 1
                 newPlayer = Player(self, player)
                 newPlayer.config(bg="grey", bd=5, relief="raised")
-                newPlayer.grid(row=self.rowCount, column=self.columnCount)
+                newPlayer.grid(row = self.rowCount, column = self.columnCount, sticky = "NSEW")
                 self.playerWidget.append(newPlayer)
                 self.playing.append(player)
                 # Reset the column count if it gets to 3 to keep it in rows of 3
@@ -70,14 +93,14 @@ class Application(tk.Frame):
         self.lastMove = tk.Label(self, text="Select the players in the game",
             width = 52, height = 2,
             relief = "sunken", bg = "black", fg = "white")
-        self.lastMove.grid(row=2, column=1, columnspan=2, ipady="3")
+        self.lastMove.grid(row = 2, column = 1, columnspan = 2, ipady = 3, sticky = "NSEW")
 
         self.undoButton = tk.Button(self, text="Undo",
             width = 25, height = 2,
             relief = "raised", bg = "black", fg = "white",
             command = lambda: self.takeAwayStat(),
             state = "disabled")
-        self.undoButton.grid(row=2, column=3)
+        self.undoButton.grid(row = 2, column = 3, sticky = "NSEW")
 
     def updateVisualCue(self, message, level, sublevel, player):
         self.undoButton.config(state = "normal")
