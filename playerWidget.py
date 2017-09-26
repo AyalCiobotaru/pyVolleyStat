@@ -1,16 +1,27 @@
 import tkinter as tk
+from tkinter import messagebox
 import pandas as pd
 from dataFrameDAO import *
 
 class Player(tk.Frame):
     def __init__(self, master, name):
         super().__init__(master)
-        tk.Label(self, text=name, bg = "blue", fg="red").grid(row=0, column=0, columnspan=4)
+        tk.Label(self, text=name, bg = "blue", fg="red").grid(row = 0, column = 0, columnspan = 4, sticky = "NSEW")
         self.Name = name
         self.Master = master
         self.initialButtons()
         self.quit = tk.Button(self, bg = "red", text = "X", command = lambda: self.onExit())
-        # self.quit.grid(row=0, column=4)
+        self.quit.grid(row = 0, column = 4, sticky = "NSEW")
+
+        self.grid_columnconfigure(0, weight = 1)
+        self.grid_columnconfigure(1, weight = 1)
+        self.grid_columnconfigure(2, weight = 1)
+        self.grid_columnconfigure(3, weight = 1)
+        self.grid_columnconfigure(4, weight = 1)
+
+        self.grid_rowconfigure(0, weight = 1)
+        self.grid_rowconfigure(1, weight = 1)
+        self.grid_rowconfigure(2, weight = 1)
 
     def midPlayButtons(self):
         self.stat0.config(text="Att", command=lambda: self.buttonCommandHelper("Attack", "Att", self.Name, False))
@@ -52,46 +63,46 @@ class Player(tk.Frame):
             addOneStatDAO(level, "Att", player) if level == "Attack" else addOneStatDAO(level, "Tot", player)
 
     def initialButtons(self):
-        self.stat0 = tk.Button(self, height=2, width=3,
+        self.stat0 = tk.Button(self, height = 2, width = 3,
             text = "0", relief = "flat",
             command = lambda: self.buttonCommandHelper("Reception", "0", self.Name, False))
-        self.stat0.grid(row=1, column=0, padx=2, pady=2)
+        self.stat0.grid(row = 1, column = 0, padx = 2, pady = 2, sticky = "NSEW")
 
-        self.stat1 = tk.Button(self, height=2, width=3,
+        self.stat1 = tk.Button(self, height = 2, width = 3,
             text = "1", relief = "flat",
             command = lambda: self.buttonCommandHelper("Reception", "1", self.Name, True))
-        self.stat1.grid(row=1, column=1, padx=2, pady=2)
+        self.stat1.grid(row = 1, column = 1, padx = 2, pady = 2, sticky = "NSEW")
 
-        self.stat2 = tk.Button(self, height=2, width=3,
+        self.stat2 = tk.Button(self, height = 2, width = 3,
             text = "2", relief = "flat",
             command = lambda: self.buttonCommandHelper("Reception", "2", self.Name, True))
-        self.stat2.grid(row=1, column=2, padx=2, pady=2)
+        self.stat2.grid(row = 1, column = 2, padx = 2, pady = 2, sticky = "NSEW")
 
-        self.stat3 = tk.Button(self, height=2, width=3,
+        self.stat3 = tk.Button(self, height = 2, width = 3,
             text = "3", relief = "flat",
             command = lambda: self.buttonCommandHelper("Reception", "3", self.Name, True))
-        self.stat3.grid(row=1, column=3, padx=2, pady=2)
+        self.stat3.grid(row = 1, column = 3, padx = 2, pady = 2, sticky = "NSEW")
 
-        self.stat4 = tk.Button(self, height=2, width=3,
+        self.stat4 = tk.Button(self, height = 2, width = 3,
             text = "Dig", relief = "flat",
             command = lambda: self.buttonCommandHelper("Dig", "Tot", self.Name, False),
             state="disabled")
-        self.stat4.grid(row=1, column=4, padx=2, pady=2)
+        self.stat4.grid(row = 1, column = 4, padx = 2, pady = 2, sticky = "NSEW")
 
-        self.serve1 = tk.Button(self, height=1, width = 8,
+        self.serve1 = tk.Button(self, height = 1, width = 8,
             text = "Serve", relief = "ridge",
             command = lambda: self.buttonCommandHelper("Serve", "Tot", self.Name, True))
-        self.serve1.grid(row=2, column=0, columnspan=2)
+        self.serve1.grid(row = 2, column = 0, columnspan = 2, sticky = "NSEW")
 
         self.serve2 = tk.Button(self, height = 1, width = 8,
             text = "Serve Err", relief = "ridge",
             command = lambda: self.buttonCommandHelper("Serve", "Err", self.Name, False))
-        self.serve2.grid(row=2, column=2, columnspan=2)
+        self.serve2.grid(row = 2, column = 2, columnspan = 2, sticky = "NSEW")
 
         self.serve3 = tk.Button(self, height = 1, width = 3,
             text = "Ace", relief = "ridge",
             command = lambda: self.buttonCommandHelper("Serve", "Ace", self.Name, False))
-        self.serve3.grid(row=2, column = 4)
+        self.serve3.grid(row = 2, column = 4, sticky = "NSEW")
 
     def myStringBuilder(self, level, sublevel, player):
         message = player
@@ -125,4 +136,5 @@ class Player(tk.Frame):
         return message
 
     def onExit(self):
-        print("Hi")
+        messagebox.showinfo("New Database",
+        "Yea this does nothing yet, but it'll clear this player so you can sub somebody else in but until then, its just a place holder cause it looks weird without it.")
