@@ -133,18 +133,21 @@ class volleyGUI(tk.Frame):
             slaves[len(slaves) - 1].pack_forget()
 
     def takeAwayStat(self):
-        toRemove = self.actions.pop()
-        level = toRemove.getLevel()
-        sublevel = toRemove.getSublevel()
-        player = toRemove.getPlayer()
-        removeOneStatDAO(level, sublevel, player)
-        if sublevel == "Kill" or sublevel == "Err" or sublevel == "Ace":
-            removeOneStatDAO(level, "Att", player) if level == "Attack" else removeOneStatDAO(level, "Tot", player)
-            self.toServeAndReceiveButtons()
-        else:
-            self.toMidPlayButtons()
-        self.updateVisualCue(toRemove, False)
-        # self.undoButton.config(state = "disabled")
+        try:
+            toRemove = self.actions.pop()
+            level = toRemove.getLevel()
+            sublevel = toRemove.getSublevel()
+            player = toRemove.getPlayer()
+            removeOneStatDAO(level, sublevel, player)
+            if sublevel == "Kill" or sublevel == "Err" or sublevel == "Ace":
+                removeOneStatDAO(level, "Att", player) if level == "Attack" else removeOneStatDAO(level, "Tot", player)
+                self.toServeAndReceiveButtons()
+            else:
+                self.toMidPlayButtons()
+            self.updateVisualCue(toRemove, False)
+        except IndexError:
+            messagebox.showerror("Undo",
+            "Nothing to Undo")
 
     def toMidPlayButtons(self):
         for player in self.playerWidget:
