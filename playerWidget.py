@@ -2,15 +2,16 @@ import tkinter as tk
 from tkinter import messagebox
 import pandas as pd
 from dataFrameDAO import *
+from lastAction import *
 
 class Player(tk.Frame):
     def __init__(self, master, name):
         super().__init__(master)
-        tk.Label(self, text=name, bg = "blue", fg="red").grid(row = 0, column = 0, columnspan = 4, sticky = "NSEW")
+        tk.Label(self, text=name, font = "Helvitica 12 bold", bg = "#C2C2C2", fg="#6B0002").grid(row = 0, column = 0, columnspan = 4, sticky = "NSEW")
         self.Name = name
         self.Master = master
         self.initialButtons()
-        self.quit = tk.Button(self, bg = "red", text = "X", command = lambda: self.onExit())
+        self.quit = tk.Button(self, bg = "#AD0006", fg = "#FFFFFF", text = "X", command = lambda: self.onExit())
         self.quit.grid(row = 0, column = 4, sticky = "NSEW")
 
         self.grid_columnconfigure(0, weight = 1)
@@ -46,8 +47,8 @@ class Player(tk.Frame):
     def buttonCommandHelper(self, level, sublevel, player, changeButtons):
         """Calls addOneStat as well as the midPlayButtons or showServeRecieve functions"""
         self.addOneStat(level, sublevel, player)
-        visualCueMessage = self.myStringBuilder(level, sublevel, player)
-        self.Master.updateVisualCue(visualCueMessage, level, sublevel, player)
+        visualCueMessage = lastAction(level, sublevel, player)
+        self.Master.updateVisualCue(visualCueMessage, True)
         if changeButtons:
             if level == "Serve" or level == "Reception":
                 self.Master.toMidPlayButtons()
@@ -104,37 +105,6 @@ class Player(tk.Frame):
             command = lambda: self.buttonCommandHelper("Serve", "Ace", self.Name, False))
         self.serve3.grid(row = 2, column = 4, sticky = "NSEW")
 
-    def myStringBuilder(self, level, sublevel, player):
-        message = player
-        if level == "Attack":
-            if sublevel == "Att":
-                message += " got an attempt"
-            elif sublevel == "Kill":
-                message += " got a kill"
-            else:
-                message += " got a hitting error"
-        elif level == "Serve":
-            if sublevel == "Tot":
-                message += " served the ball in"
-            elif sublevel == "Ace":
-                message += " got an ace"
-            else:
-                message += " got a service error"
-        elif level == "Dig":
-            message += " got a dig"
-        elif level == "Block":
-            message += " got a block"
-        else: # Reception
-            if sublevel == "0":
-                message += " got aced"
-            if sublevel == "1":
-                message += " passed a 1"
-            if sublevel == "2":
-                message += " passed a 2"
-            if sublevel == "3":
-                message += " passed a 3"
-        return message
-
     def onExit(self):
-        messagebox.showinfo("New Database",
+        messagebox.showinfo("Remove Plyaer",
         "Yea this does nothing yet, but it'll clear this player so you can sub somebody else in but until then, its just a place holder cause it looks weird without it.")

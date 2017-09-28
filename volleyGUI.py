@@ -3,18 +3,22 @@ from tkinter import messagebox, filedialog
 from playerWidget import Player
 from scrollableFrame import scrollableFrame
 from dataFrameDAO import *
+from lastAction import *
 
-class Application(tk.Frame):
+class volleyGUI(tk.Frame):
     def __init__(self, master, *args, **kw):
         super().__init__(master, *args, **kw)
         self.grid(sticky = "NSEW")
 
         self.players = ["Ayal","Brendan", "Carl", "James", "Kyle", "Max", "Ryan", "Scott", "Sean", "Tyler", "Yoder"]
         self.playing = []
+        self.backgrounds = ["#C2C2C2", "#8A0005"]
+        self.foregrounds = ["#8A0005", "#C2C2C2"]
+        self.colorTracker = 0
         self.playerWidget = []
         self.columnCount=0
         self.rowCount=0
-        self.lastAction = {"level":"", "sublevel":"", "Player":""}
+        self.actions = []
 
         self.bind("<Configure>", self.onResize)
         self.bind("<Destroy>", self.onExit)
@@ -24,13 +28,11 @@ class Application(tk.Frame):
         self.createMenu()
         self.createVisualCue()
 
-        self.grid_columnconfigure(0, weight = 1)
-        self.grid_columnconfigure(1, weight = 1)
-        self.grid_columnconfigure(2, weight = 1)
-        self.grid_columnconfigure(3, weight = 1)
-        self.grid_rowconfigure(0, weight = 1)
-        self.grid_rowconfigure(1, weight = 1)
-        self.grid_rowconfigure(2, weight = 1)
+        for x in range(5):
+            self.grid_columnconfigure(x, weight = 1)
+
+        for x in range(3):
+            self.grid_rowconfigure(x, weight = 1)
 
     def onResize(self, event):
          # determine the ratio of old width/height to new width/height
@@ -58,6 +60,8 @@ class Application(tk.Frame):
         scframe = scrollableFrame(self)
         scframe.grid(row = 0, column = 0, rowspan = 2, sticky = "NSEW")
 
+        self.scframe2 = scrollableFrame(self)
+
         def createPlayer(player):
             # Check to make sure player isn't already in the game
             if player in self.playing:
@@ -83,43 +87,64 @@ class Application(tk.Frame):
 
 
         for i, x in enumerate(self.players):
-            btn = tk.Button(scframe.interior, height=1, width=20, relief=tk.FLAT,
-                bg="gray99", fg="purple3",
-                font="Dosis", text=self.players[i],
-                command=lambda i=i,x=x: createPlayer(self.players[i]))
-            btn.pack(padx=10, pady=5, side=tk.TOP)
+            btn = tk.Button(scframe.interior, height = 1, width = 20, relief = "flat",
+                bg = "#8A0005", fg = "#E6E6E6",
+                font = "Dosis", text = self.players[i],
+                command = lambda i = i,x = x: createPlayer(self.players[i]))
+            btn.pack(padx = 10, pady = 5, side = "top", fill = "x", expand = "yes")
 
     def createVisualCue(self):
         self.lastMove = tk.Label(self, text="Select the players in the game",
-            width = 52, height = 2,
-            relief = "sunken", bg = "black", fg = "white")
-        self.lastMove.grid(row = 2, column = 1, columnspan = 2, ipady = 3, sticky = "NSEW")
+            width = 52, height = 1,
+            relief = "sunken", bg = "#8A0005", fg = "#E6E6E6")
+        self.lastMove.grid(row = 2, column = 1, columnspan = 2, ipady = 3, sticky = "NEW")
 
         self.undoButton = tk.Button(self, text="Undo",
-            width = 25, height = 2,
-            relief = "raised", bg = "black", fg = "white",
+            width = 25, height = 1,
+            relief = "raised", bg = "#8A0005", fg = "#E6E6E6",
             command = lambda: self.takeAwayStat(),
             state = "disabled")
-        self.undoButton.grid(row = 2, column = 3, sticky = "NSEW")
+        self.undoButton.grid(row = 2, column = 3, sticky = "NEW")
 
-    def updateVisualCue(self, message, level, sublevel, player):
+    def updateVisualCue(self, action, add):
         self.undoButton.config(state = "normal")
-        self.lastMove.config(text = message)
-        self.lastAction["Player"] = player
-        self.lastAction["level"] = level
-        self.lastAction["sublevel"] = sublevel
+        self.lastMove.config(text = action.getMessage()) if add else self.lastMove.config(text = action.getRemoveMessage())
+        self.updateHistory(action, add)
+        if add:
+            self.actions.append(action)
+
+    def updateHistory(self, action, add):
+        if add:
+            self.scframe2.grid(row = 0, column = 4, rowspan = 2, sticky = "NSEW")
+            self.colorTracker += 1
+            if self.colorTracker == 2:
+                self.colorTracker = 0
+            txt = tk.Text(self.scframe2.interior, height = 1, width = 25, relief = "flat",
+                bg = self.backgrounds[self.colorTracker], fg = self.foregrounds[self.colorTracker],
+                font = "Helvitica 10 bold")
+            txt.insert("end", action.getMessage()) if add else txt.insert("end", action.getRemoveMessage())
+            txt.config(state = "disabled")
+            txt.pack(padx = 10, pady = 5, side = "bottom", fill = "x", expand = "yes")
+            self.scframe2.resetView()
+        else:
+            # get's the scrollableFrame object using grid_slaves, then the Frame using getInterior()
+            # and finally all the text objects using pack_slaves(), returns a list of text objects
+            slaves = self.grid_slaves(0, 4)[0].getInterior().pack_slaves()
+            slaves[len(slaves) - 1].pack_forget()
 
     def takeAwayStat(self):
-        removeOneStatDAO(self.lastAction["level"], self.lastAction["sublevel"], self.lastAction["Player"])
-        if self.lastAction["sublevel"] == "Kill" or self.lastAction["sublevel"] == "Err" or self.lastAction["sublevel"] == "Ace":
-            removeOneStatDAO(self.lastAction["level"], "Att", self.lastAction["Player"]) if self.lastAction["level"] == "Attack" else removeOneStatDAO(self.lastAction["level"], "Tot", self.lastAction["Player"])
-        if self.lastAction["level"] == "Serve" or self.lastAction["level"] == "Reception":
+        toRemove = self.actions.pop()
+        level = toRemove.getLevel()
+        sublevel = toRemove.getSublevel()
+        player = toRemove.getPlayer()
+        removeOneStatDAO(level, sublevel, player)
+        if sublevel == "Kill" or sublevel == "Err" or sublevel == "Ace":
+            removeOneStatDAO(level, "Att", player) if level == "Attack" else removeOneStatDAO(level, "Tot", player)
             self.toServeAndReceiveButtons()
         else:
             self.toMidPlayButtons()
-        self.updateVisualCue("%s's %s stat was removed" % (self.lastAction["Player"], self.lastAction["level"]), "", "" , "")
-        self.undoButton.config(state = "disabled")
-
+        self.updateVisualCue(toRemove, False)
+        # self.undoButton.config(state = "disabled")
 
     def toMidPlayButtons(self):
         for player in self.playerWidget:

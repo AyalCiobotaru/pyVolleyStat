@@ -1,7 +1,7 @@
 import tkinter as tk
 
 class scrollableFrame(tk.Frame):
-    """A pure Tkinter scrollable frame that actually works!
+    """A Tkinter scrollable frame
 
     * Use the 'interior' attribute to place widgets inside the scrollable frame
     * Construct and pack/place/grid normally
@@ -11,36 +11,42 @@ class scrollableFrame(tk.Frame):
         tk.Frame.__init__(self, master, *args, **kw)
 
         # create a canvas object and a vertical scrollbar for scrolling it
-        vscrollbar = tk.Scrollbar(self, orient=tk.VERTICAL)
-        vscrollbar.pack(fill=tk.Y, side=tk.RIGHT, expand=tk.TRUE)
-        canvas = tk.Canvas(self, bd=0, highlightthickness=0,
-                        yscrollcommand=vscrollbar.set)
-        canvas.pack(side=tk.LEFT, fill=tk.Y, expand=tk.TRUE)
-        vscrollbar.config(command=canvas.yview)
+        self.vscrollbar = tk.Scrollbar(self, orient = "vertical")
+        self.vscrollbar.pack(fill = "both", side = "right")
+        self.canvas = tk.Canvas(self, bd = 0, highlightthickness = 0,
+                        yscrollcommand = self.vscrollbar.set)#, bg = "black")
+        self.canvas.pack(side = "left", fill = "both", expand = "yes")
+        self.vscrollbar.config(command = self.canvas.yview)
 
         # reset the view
-        canvas.xview_moveto(0)
-        canvas.yview_moveto(0)
+        self.resetView()
 
         # create a frame inside the canvas which will be scrolled with it
-        self.interior = interior = tk.Frame(canvas)
-        interior_id = canvas.create_window(0, 0, window=interior,
-                                           anchor=tk.NW)
+        self.interior = tk.Frame(self.canvas)#, bg = "pink")
+        self.interior_id = self.canvas.create_window(0, 0, window = self.interior,
+                                           anchor = "nw")
 
-        # track changes to the canvas and frame width and sync them,
-        # also updating the scrollbar
-        def _configure_interior(event):
-            # update the scrollbars to match the size of the inner frame
-            size = (interior.winfo_reqwidth(), interior.winfo_reqheight())
-            canvas.config(scrollregion="0 0 %s %s" % size)
-            if interior.winfo_reqwidth() != canvas.winfo_width():
-                # update the canvas's width to fit the inner frame
-                canvas.config(width=interior.winfo_reqwidth())
+        self.interior.bind("<Configure>", self.configureInterior)
+        self.canvas.bind("<Configure>", self.configureCanvas)
 
-        interior.bind('<Configure>', _configure_interior)
+    # track changes to the canvas and frame width and sync them,
+    # also updating the scrollbar
+    def configureInterior(self, event):
+        # update the scrollbars to match the size of the inner frame
+        size = (self.interior.winfo_reqwidth(), self.interior.winfo_reqheight())
+        self.canvas.config(scrollregion = "0 0 %s %s" % size)
+        if self.interior.winfo_reqwidth() != self.canvas.winfo_width():
+            # update the canvas's width to fit the inner frame
+            self.canvas.config(width = self.interior.winfo_reqwidth())
 
-        def _configure_canvas(event):
-            if interior.winfo_reqwidth() != canvas.winfo_width():
-                # update the inner frame's width to fill the canvas
-                canvas.itemconfigure(interior_id, width=canvas.winfo_width())
-        canvas.bind('<Configure>', _configure_canvas)
+    def configureCanvas(self, event):
+        if self.interior.winfo_reqwidth() != self.canvas.winfo_width():
+            # update the inner frame's width to fill the canvas
+            self.canvas.itemconfigure(self.interior_id, width = self.canvas.winfo_width())
+
+    def getInterior(self):
+        return self.interior
+    
+    def resetView(self):
+        self.canvas.xview_moveto(0)
+        self.canvas.yview_moveto(0)
