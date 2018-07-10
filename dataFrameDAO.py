@@ -10,6 +10,13 @@ def loadDatabase(name):
     global Stats
     Stats = pd.read_pickle(name.name)
 
+def addPlayerDAO(currentPlayers):
+    global Stats
+    name = input("Enter name of new player")
+    newIndex = currentPlayers.append(name)
+    Stats.reindex(newIndex)
+    Stats.fillna(0)
+
 def addOneStatDAO(level, sublevel, player):
     global Stats
     def addOne(x):
