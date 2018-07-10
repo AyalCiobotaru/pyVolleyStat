@@ -88,7 +88,7 @@ class volleyGUI(tk.Frame):
 
         for i, x in enumerate(self.players):
             btn = tk.Button(scframe.interior, height=1, width=20, relief="flat",
-                            highlightbackground="#8A0005", fg="#E6E6E6",
+                            bg="#8A0005", fg="#E6E6E6",
                             font="Dosis", text=self.players[i],
                             command=lambda i=i, x=x: createPlayer(self.players[i]))
             btn.pack(padx=10, pady=5, side="top", fill="x", expand="yes")
@@ -101,7 +101,7 @@ class volleyGUI(tk.Frame):
 
         self.undoButton = tk.Button(self, text="Undo",
                                     width=25, height=1,
-                                    relief="raised", highlightbackground="#8A0005", fg="#E6E6E6",
+                                    relief="raised", bg="#8A0005", fg="#E6E6E6",
                                     command=lambda: self.takeAwayStat(),
                                     state="disabled")
         self.undoButton.grid(row=2, column=3, sticky="NEW")
