@@ -26,9 +26,9 @@ Once all are met, run:
 OR
 
 On Windows, run Startup.bat and  once the pipenv shell is executed run 
-'''python main.py'''
+```python main.py```
 
 On Mac, run Startup and once the pipenv shells is executed run 
-'''python main.py'''
+```python main.py```
 
 This will open up a tkinter GUI with a list of names on the left side, push buttons to insert players into the game, then begin statting.
