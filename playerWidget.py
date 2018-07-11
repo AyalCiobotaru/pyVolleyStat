@@ -129,15 +129,3 @@ class Player(tk.Frame):
     def onExit(self):
         dialog = subPlayer(self.master, self, "Choose Player to sub")
         dialog.focus()
-
-
-
-
-        # messagebox.showinfo("Remove Player",
-        # "Yea this does nothing yet, but it'll clear this player so you can sub somebody else in but until then, its just a place holder cause it looks weird without it.\n Players %s" % self.Master.getPlayers())
-        # for i, x in enumerate(self.Master.getPlayers()):
-        #     btn = tk.Button(messagebox, height=1, width=20, relief="flat",
-        #                     bg="#8A0005", fg="#E6E6E6",
-        #                     font="Dosis", text=self.Master.getPlayers()[i],
-        #                     command=lambda i=i, x=x: changeName(self.Master.getPlayers()[i]))
-        #     btn.pack(padx=10, pady=5, side="top", fill="x", expand="yes")
