@@ -24,7 +24,8 @@ def addOneStatDAO(level, sublevel, player):
         Returns 1 if x is np.NaN else x + 1
         """
         return 1 if pd.isnull(x) else x + 1
-    Stats.set_value(player , (level, sublevel), addOne(Stats[level][sublevel][player]))
+    # Stats.set_value(player , (level, sublevel), addOne(Stats[level][sublevel][player])) ** DEPRECATED **
+    Stats.at[player, (level, sublevel)] = addOne(Stats.at[player, (level, sublevel)])
 
 def removeOneStatDAO(level, sublevel, player):
     global Stats
@@ -33,7 +34,8 @@ def removeOneStatDAO(level, sublevel, player):
         Returns x - 1
         """
         return x - 1
-    Stats.set_value(player, (level, sublevel), subOne(Stats[level][sublevel][player]))
+    # Stats.set_value(player, (level, sublevel), subOne(Stats[level][sublevel][player])) ** DEPRECATED **
+    Stats.at[player, (level, sublevel)] = subOne(Stats.at[player, (level, sublevel)])
 
 def printDataframe():
     global Stats
