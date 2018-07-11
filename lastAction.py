@@ -5,7 +5,11 @@ class lastAction(object):
         self.sublevel = sublevel
         self.player = player
 
-        self.message = self.player
+        if self.level == "initial":
+            self.message = "Awaiting Player Select"
+        else:
+            self.message = self.player
+
         if self.level == "Attack":
             if self.sublevel == "Att":
                 self.message += " got an attempt"
@@ -23,7 +27,10 @@ class lastAction(object):
         elif self.level == "Dig":
             self.message += " got a dig"
         elif level == "Block":
-            self.message += " got a block"
+            if sublevel == "Err":
+                self.message += " got tooled"
+            else:
+                self.message += " got a block"
         else: # Reception
             if self.sublevel == "0":
                 self.message += " got aced"

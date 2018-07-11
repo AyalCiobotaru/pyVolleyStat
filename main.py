@@ -8,7 +8,7 @@ if __name__ == '__main__':
     root.config(bg="gray99")
     root.grid_columnconfigure(0, weight = 1)
     root.grid_rowconfigure(0, weight = 1)
+    root.minsize(1500, 500)
     getEmptyDataFrame()
     app = volleyGUI(master=root)
-    app.createBoard()
     app.mainloop()

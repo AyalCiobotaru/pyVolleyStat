@@ -26,6 +26,7 @@ class volleyGUI(tk.Frame):
         self.height = self.winfo_reqheight()
         self.width = self.winfo_reqwidth()
 
+        self.createBoard()
         self.createMenu()
         self.createVisualCue()
 
@@ -34,6 +35,9 @@ class volleyGUI(tk.Frame):
 
         for x in range(3):
             self.grid_rowconfigure(x, weight=1)
+
+    def getPlayers(self):
+        return self.players
 
     def onResize(self, event):
         # determine the ratio of old width/height to new width/height
@@ -83,8 +87,7 @@ class volleyGUI(tk.Frame):
             else:
                 messagebox.showwarning("Add Player",
                                        "Cannot add %s for there are already six players in the game." % player +
-                                       "\nRemove a player in order to add another." +
-                                       "\n\nBut that's not implemented yet, so use these guys or start over.")
+                                       "\nSub a player out in order to add a different one.")
 
         for i, x in enumerate(self.players):
             btn = tk.Button(scframe.interior, height=1, width=20, relief="flat",
@@ -105,6 +108,7 @@ class volleyGUI(tk.Frame):
                                     command=lambda: self.takeAwayStat(),
                                     state="disabled")
         self.undoButton.grid(row=2, column=3, sticky="NEW")
+        self.updateHistory(lastAction("initial", None, None), True)
 
     def updateVisualCue(self, action, add):
         self.undoButton.config(state="normal")
@@ -159,6 +163,12 @@ class volleyGUI(tk.Frame):
 
     def newSession(self):
         getEmptyDataFrame()
+        for player in self.grid_slaves():
+            if int(player.grid_info()["row"]) < 2 and int(player.grid_info()["column"]) > 0 and int(player.grid_info()["column"]) < 4:
+                player.grid_forget()
+        self.playing = []
+        self.columnCount = 0
+        self.rowCount = 0
         messagebox.showinfo("New Database",
                             "New empty Database has been loaded.")
 
