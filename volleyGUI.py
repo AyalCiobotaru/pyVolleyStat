@@ -121,10 +121,8 @@ class volleyGUI(tk.Frame):
         if add:
             self.scframe2.grid(row=0, column=4, rowspan=2, sticky="NSEW")
             self.colorTracker += 1
-            if self.colorTracker == 2:
-                self.colorTracker = 0
             txt = tk.Text(self.scframe2.interior, height=1, width=25, relief="flat",
-                          bg=self.backgrounds[self.colorTracker], fg=self.foregrounds[self.colorTracker],
+                          bg=self.backgrounds[self.colorTracker % 2], fg=self.foregrounds[self.colorTracker % 2],
                           font="Helvitica 10 bold")
             txt.insert("end", action.getMessage()) if add else txt.insert("end", action.getRemoveMessage())
             txt.config(state="disabled")
@@ -143,8 +141,10 @@ class volleyGUI(tk.Frame):
             sublevel = toRemove.getSublevel()
             player = toRemove.getPlayer()
             removeOneStatDAO(level, sublevel, player)
+            self.colorTracker += 1
             if sublevel == "Kill" or sublevel == "Err" or sublevel == "Ace":
                 removeOneStatDAO(level, "Att", player) if level == "Attack" else removeOneStatDAO(level, "Tot", player)
+            if level == "Serve" or level == "Reception":
                 self.toServeAndReceiveButtons()
             else:
                 self.toMidPlayButtons()
@@ -166,9 +166,14 @@ class volleyGUI(tk.Frame):
         for player in self.grid_slaves():
             if int(player.grid_info()["row"]) < 2 and int(player.grid_info()["column"]) > 0 and int(player.grid_info()["column"]) < 4:
                 player.grid_forget()
+        slaves = self.grid_slaves(0, 4)[0].getInterior().pack_slaves()
+        for slave in slaves:
+            slave.pack_forget()
         self.playing = []
         self.columnCount = 0
         self.rowCount = 0
+        self.lastMove['text'] = "Select the players in the game"
+
         messagebox.showinfo("New Database",
                             "New empty Database has been loaded.")
 
