@@ -29,11 +29,12 @@ class volleyGUI(tk.Frame):
         self.createBoard()
         self.createMenu()
         self.createVisualCue()
+        self.createPointBtn()
 
         for x in range(5):
             self.grid_columnconfigure(x, weight=1)
 
-        for x in range(3):
+        for x in range(2):
             self.grid_rowconfigure(x, weight=1)
 
     def getPlayers(self):
@@ -134,13 +135,29 @@ class volleyGUI(tk.Frame):
             slaves = self.grid_slaves(0, 4)[0].getInterior().pack_slaves()
             slaves[len(slaves) - 1].pack_forget()
 
+    def createPointBtn(self):
+        ourBtn = tk.Button(self, text="We got a point", width=52,
+                        relief="raised", bg="#C2C2C2", fg="#6B0002", font="Dosis",
+                        command=lambda x=1: self.point("Good Guys"))
+        ourBtn.grid(row=3, column=1, columnspan=2, sticky="NEW")
+
+        opponentBtn = tk.Button(self, text="Opponent got a point", width=25,
+                        relief="raised", bg="#C2C2C2", fg="#6B0002", font="Dosis",
+                        command=lambda x=1: self.point("Opponent"))
+        opponentBtn.grid(row=3, column=3, columnspan=1, sticky="NEW")
+
+    def point(self, team):
+        self.updateVisualCue(lastAction(team, None, None), True)
+        self.toServeAndReceiveButtons()
+
     def takeAwayStat(self):
         try:
             toRemove = self.actions.pop()
             level = toRemove.getLevel()
             sublevel = toRemove.getSublevel()
             player = toRemove.getPlayer()
-            removeOneStatDAO(level, sublevel, player)
+            if level != "Opponent" and level != "Good Guys":
+                removeOneStatDAO(level, sublevel, player)
             self.colorTracker += 1
             if sublevel == "Kill" or sublevel == "Err" or sublevel == "Ace":
                 removeOneStatDAO(level, "Att", player) if level == "Attack" else removeOneStatDAO(level, "Tot", player)

@@ -1,7 +1,7 @@
 import tkinter as tk
 
 class subPlayer(tk.Toplevel):
-    def __init__(self, master, player, title, message, detail):
+    def __init__(self, master, player, title):
         tk.Toplevel.__init__(self)
         self.details_expanded = False
         self.title(title)
@@ -21,7 +21,7 @@ class subPlayer(tk.Toplevel):
 
         for i, x in enumerate(self.Master.getPlayers()):
             btn = tk.Button(button_frame, height=1, width=10, relief="flat",
-                            bg="#8A0005", fg="#E6E6E6",
+                            bg = "#C2C2C2", fg="#6B0002",
                             font="Dosis", text=self.Master.getPlayers()[i],
                             command=lambda i=i, x=x: self.onButtonPress(self.Master.getPlayers()[i]))
             btn.pack(padx=10, pady=5, side="top", fill="x", expand="yes")

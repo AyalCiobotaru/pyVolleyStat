@@ -7,8 +7,15 @@ class lastAction(object):
 
         if self.level == "initial":
             self.message = "Awaiting Player Select"
+        elif self.level == "Opponent":  
+            self.message = "Opponent got a point"     
+            self.removeMessage = "Opponent's point was removed"   
+        elif self.level == "Good Guys":
+            self.message = "Good Guys got a point"
+            self.removeMessage = "Good Guys' point was removed :("    
         else:
             self.message = self.player
+            self.removeMessage = "%s's %s stat was removed" % (player, level)
 
         if self.level == "Attack":
             if self.sublevel == "Att":
@@ -40,7 +47,8 @@ class lastAction(object):
                 self.message += " passed a 2"
             if self.sublevel == "3":
                 self.message += " passed a 3"
-        self.removeMessage = "%s's %s stat was removed" % (player, level)
+        
+        
 
     def getMessage(self):
         return self.message

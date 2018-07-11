@@ -118,7 +118,7 @@ class Player(tk.Frame):
 
     def changeName(self, name):
         if name in self.Master.playing:
-            messagebox.showinfo("Already Playing", "That player is already in the game, choose a different player")
+            messagebox.showinfo("Already Playing", "%s is already in the game, choose a different player" % name)
         else:
             self.Master.playing.remove(self.Name)
             self.Name = name
@@ -127,7 +127,7 @@ class Player(tk.Frame):
 
 
     def onExit(self):
-        dialog = subPlayer(self.master, self, "Choose Player to sub", "hi", "details")
+        dialog = subPlayer(self.master, self, "Choose Player to sub")
         dialog.focus()
 
 
